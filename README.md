@@ -1,6 +1,12 @@
 This is a simple job search webpage
 
 
+### Website
+
+Website: https://govindak-umd.github.io/jobmatch/
+
+### Steps
+
 Step 1: Resume upload (PDF/text)
 
 Step 2: Location inputs (add multiple)
