@@ -366,7 +366,6 @@
 
 <main>
 
-  <!-- Step 1: Resume -->
   <div class="step">
     <div class="step-label">Step 1</div>
     <h2>Upload your resume</h2>
@@ -383,28 +382,24 @@
     </div>
   </div>
 
-  <!-- Step 2: Locations -->
   <div class="step">
     <div class="step-label">Step 2</div>
     <h2>Where do you want to work?</h2>
     <div class="location-list" id="locationList"></div>
     <div class="location-input-row">
-      <input type="text" id="locationInput" placeholder="e.g. Boston, MA or Remote" />
+      <input type="text" id="locationInput" placeholder="e.g. 02148, Boston, MA, or Remote" />
       <button class="add-btn" onclick="addLocation()">+ Add</button>
     </div>
   </div>
 
-  <!-- Step 3: Preferences -->
   <div class="step">
     <div class="step-label">Step 3 — Optional</div>
     <h2>Anything else you're looking for?</h2>
     <textarea id="preferences" placeholder="e.g. I'm looking for a senior role at a startup, ideally in climate tech or fintech. I prefer hybrid or remote. Open to contract work too."></textarea>
   </div>
 
-  <!-- Search -->
   <button class="search-btn" id="searchBtn" onclick="findJobs()">Find my jobs →</button>
 
-  <!-- Results -->
   <div id="results"></div>
 
   <p class="notice">JobMatch uses AI to find and rank real job listings based on your resume.<br>No account required. Nothing is stored or shared.</p>
@@ -455,7 +450,16 @@
   function addLocation() {
     const input = document.getElementById('locationInput');
     const val = input.value.trim();
-    if (!val || locations.includes(val)) { input.value = ''; return; }
+
+    // Check if input is a 5-digit zip code or descriptive text (city/state/remote)
+    const isZip = /^\d{5}$/.test(val);
+    const isText = val.length >= 2;
+
+    if (!val || (!isZip && !isText) || locations.includes(val)) {
+      input.value = '';
+      return;
+    }
+
     locations.push(val);
     renderLocations();
     input.value = '';
@@ -501,7 +505,6 @@
     btn.disabled = true;
     btn.textContent = 'Searching...';
 
-    // Cycle loading messages
     let msgIdx = 0;
     resultsEl.innerHTML = `
       <div class="loading-state">
@@ -554,7 +557,7 @@
 RESUME:
 ${resume.slice(0, 3000)}
 
-TARGET LOCATIONS: ${locs.join(', ')}
+TARGET LOCATIONS: ${locs.join(', ')} (Note: Numeric entries are US Zip Codes. Please search within a reasonable commute radius of these areas).
 
 ADDITIONAL PREFERENCES: ${prefs || 'None specified'}
 
